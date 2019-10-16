@@ -2,7 +2,7 @@ const EventEmitter = require("events");
 const noble = require("noble");
 
 const { S1_SERVICE, S1_CHAR_DATA_OUTPUT, S1_CHAR_COMMAND_INPUT } = require("./uuids");
-const { ackCmd, getMaxLevel, setWorkoutMode, setWorkoutParams, setIncline, getWorkoutState } = require("./packets");
+const { ackCmd, getMaxLevel, setWorkoutMode, setWorkoutParams, setIncline, getWorkoutState, unknown0xa5 } = require("./packets");
 
 class Client {
   /**
@@ -43,31 +43,28 @@ class Client {
             return reject(err);
           }
 
-          services[0].discoverCharacteristics([S1_CHAR_COMMAND_INPUT, S1_CHAR_DATA_OUTPUT], (err, characteristics) => {
+          services[0].discoverCharacteristics([], (err, characteristics) => {
             if (err != null) {
               this.disconnect();
               return reject(err);
             }
 
-            characteristics[0].subscribe(err => {
-              if (err != null) {
-                this.disconnect();
-                return reject(err);
-              }
+            console.log(characteristics.map(c => [c.uuid, c.properties]));
 
-              this.commandInput = characteristics[0];
-              this.dataOutput = characteristics[1];
+            this.commandInput = characteristics.find(c => c.uuid === S1_CHAR_COMMAND_INPUT);
+            this.dataOutput = characteristics.find(c => c.uuid === S1_CHAR_DATA_OUTPUT);
 
-              this.dataOutput.on("data", (data, isNotification) => {
-                if (!isNotification) {
-                  return;
-                }
-
+            this.dataOutput.subscribe(() => {
+              this.dataOutput.on("data", (data) => {
                 this.handleData(data);
               })
-
+  
+              this.connected = true;
+              this.starting = false;
+              this.started = false;
+  
               this.pollData();
-
+  
               resolve();
             })
           })
@@ -84,6 +81,7 @@ class Client {
     this.events.removeAllListeners();
     this.connected = false;
     this.started = false;
+    this.starting = false;
     noble.stopScanning();
   }
 
@@ -91,13 +89,18 @@ class Client {
    * Start starts the workout. Paramters will be added once the protocol is understood better.
    */
   async start() {
+    this.starting = true;
+    await wait(100);
+    await this.writeCommand(ackCmd());
     await wait(300);
     await this.writeCommand(setWorkoutMode());
     await wait(300);
     await this.writeCommand(setWorkoutParams());
     await wait(300);
     await this.writeCommand(setIncline(18));
-
+    await wait(300);
+    await this.writeCommand(unknown0xa5());
+  
     this.started = true;
   }
 
@@ -107,6 +110,8 @@ class Client {
    * @param {number[] | Buffer | Uint8Array} data Data to write.
    */
   writeCommand(data) {
+    console.error("Send", [...data].map(n => "0x"+n.toString(16)).join(" "))
+
     return new Promise((resolve, reject) => {
       this.commandInput.write(Buffer.from(data), true, (err) => {
         if (err != null) {
@@ -127,15 +132,19 @@ class Client {
 
   async pollData() {
     try {
+      await this.writeCommand(ackCmd());
+
       while (this.connected) {
         if (this.started) {
-          this.writeCommand(getWorkoutState());
+          await this.writeCommand(getWorkoutState());
           await wait(500);
+        } else if (!this.starting) {
+          await this.writeCommand(ackCmd());
+          await wait(300);
+          await this.writeCommand(getMaxLevel());
+          await wait(300);
         } else {
-          this.writeCommand(ackCmd());
-          await wait(400);
-          this.writeCommand(getMaxLevel());
-          await wait(400);
+          await wait(100);
         }
       }
     } catch (err) {
@@ -150,22 +159,19 @@ class Client {
    * Scan for a peripheral. It will return a client you can call connect on if it
    * finds it.
    * 
+   * @param {string} uuid The uuid of the peripheral
    * @param {number} timeout How many milliseconds to scan for
    * @returns {Client}
    */
-  static scan(timeout = 30000) {
+  static scan(uuid, timeout = 30000) {
     let done = false;
 
     return new Promise((resolve, reject) => {
       noble.startScanning([]);
 
       noble.on('discover', (peripheral) => {
-        console.error("Device", peripheral.address, peripheral.advertisement.localName, peripheral.services);
-
-        if (peripheral.services == null) {
-          return
-        }
-        if (peripheral.services.find(s => s.uuid === S1_SERVICE) == null) {
+        console.error("Device", peripheral.uuid);
+        if (peripheral.uuid !== uuid) {
           return
         }
 

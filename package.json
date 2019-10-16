@@ -1,6 +1,7 @@
 {
   "name": "ykonsole",
   "version": "0.0.0",
+  "private": true,
   "description": "iConsole bluetooth client.",
   "main": "index.js",
   "scripts": {
@@ -24,7 +25,6 @@
   },
   "homepage": "https://github.com/gissleh/ykonsole#readme",
   "dependencies": {
-    "@sblendid/adapter-node": "^0.2.0",
-    "@sblendid/sblendid": "^0.2.0"
+    "noble": "^1.9.1"
   }
 }

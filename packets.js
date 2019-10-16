@@ -19,36 +19,36 @@ function withChecksum(a) {
 /**
  * Ack CMD. Sent in the beginning to black the screen.
  */
-export function ackCmd() {
+function ackCmd() {
   return withChecksum([0xf0, 0xa0, 0x01, 0x01])
 }
 
 /**
  * Gets some kind of max level? Who knows.
  */
-export function getMaxLevel() {
+function getMaxLevel() {
   return withChecksum([0xf0, 0xa1, 0x01, 0x01])
 }
 
 /**
  * Evokes a workout state. Should be sent regularly.
  */
-export function getWorkoutState() {
+function getWorkoutState() {
   return withChecksum([0xf0, 0xa2, 0x01, 0x01])
 }
 
 /**
  * Not yet demystified.
  */
-export function setWorkoutMode() {
+function setWorkoutMode() {
   return withChecksum([0xf0, 0xa3, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01])
 }
 
-export function setWorkoutParams() {
+function setWorkoutParams() {
   return withChecksum([0xf0, 0xa4, 0x01, 0x01, 0x02])
 }
 
-export function unknown0xa5() {
+function unknown0xa5() {
   return withChecksum([0xf0, 0xa5, 0x01, 0x01, 0x02])
 }
 
@@ -58,6 +58,16 @@ export function unknown0xa5() {
  * 
  * @param {number} level 
  */
-export function setIncline(level) {
+function setIncline(level) {
   return withChecksum([0xf0, 0xa6, 0x01, 0x01, 0x01+level])
 }
+
+module.exports = {
+  ackCmd,
+  getMaxLevel,
+  getWorkoutState,
+  setWorkoutMode,
+  setWorkoutParams,
+  unknown0xa5,
+  setIncline,
+};

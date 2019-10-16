@@ -1,0 +1,30 @@
+{
+  "name": "ykonsole",
+  "version": "0.0.0",
+  "description": "iConsole bluetooth client.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gissleh/ykonsole.git"
+  },
+  "keywords": [
+    "iconsole",
+    "exercise",
+    "bike",
+    "workout",
+    "bluetooth"
+  ],
+  "author": "Gisle",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gissleh/ykonsole/issues"
+  },
+  "homepage": "https://github.com/gissleh/ykonsole#readme",
+  "dependencies": {
+    "@sblendid/adapter-node": "^0.2.0",
+    "@sblendid/sblendid": "^0.2.0"
+  }
+}

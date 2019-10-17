@@ -1,8 +1,15 @@
 const EventEmitter = require("events");
 const noble = require("noble");
 
-const { S1_SERVICE, S1_CHAR_DATA_OUTPUT, S1_CHAR_COMMAND_INPUT, S1_CHAR_MYSTERY_OUTPUT, S2_SERVICE, S2_CHAR_MYSTERY_OUTPUT, CHAR_MAP } = require("./uuids");
-const { ackCmd, getMaxLevel, setWorkoutMode, setWorkoutParams, setIncline, getWorkoutState, setWorkoutControlState } = require("./packets");
+const { 
+  S1_SERVICE, S1_CHAR_DATA_OUTPUT, S1_CHAR_COMMAND_INPUT, S1_CHAR_MYSTERY_OUTPUT, 
+  S2_SERVICE, S2_CHAR_MYSTERY_OUTPUT, 
+} = require("./uuids");
+const { 
+  ackCmd, getMaxLevel, setWorkoutMode, setWorkoutParams, setIncline, 
+  getWorkoutState, setWorkoutControlState 
+} = require("./packets");
+const { Response } = require("./response");
 
 class Client {
   /**
@@ -168,7 +175,11 @@ class Client {
    * @param {Buffer} data 
    */
   handleData(uuid, data) {
-    console.log("DATA", CHAR_MAP[uuid], data);
+    if (uuid === S1_CHAR_DATA_OUTPUT) {
+      const resp = new Response(data);
+
+      console.log(resp.parse());
+    }
   }
 
   async pollData() {

@@ -31,7 +31,7 @@ function getMaxLevel() {
 }
 
 /**
- * Evokes a workout state. Should be sent regularly.
+ * Returns a workout state. Should be sent regularly.
  */
 function getWorkoutState() {
   return withChecksum([0xf0, 0xa2, 0x01, 0x01])
@@ -41,15 +41,19 @@ function getWorkoutState() {
  * Not yet demystified.
  */
 function setWorkoutMode() {
-  return withChecksum([0xf0, 0xa3, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01])
+  return withChecksum([0xf0, 0xa4, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01])
 }
 
 function setWorkoutParams() {
-  return withChecksum([0xf0, 0xa4, 0x01, 0x01, 0x02])
+  return withChecksum([0xf0, 0xa3, 0x01, 0x01, 0x02])
 }
 
-function unknown0xa5() {
-  return withChecksum([0xf0, 0xa5, 0x01, 0x01, 0x02])
+/**
+ * 
+ * @param {*} state 
+ */
+function setWorkoutControlState(state = 1) {
+  return withChecksum([0xf0, 0xa5, 0x01, 0x01, 0x01+state])
 }
 
 /**
@@ -68,6 +72,6 @@ module.exports = {
   getWorkoutState,
   setWorkoutMode,
   setWorkoutParams,
-  unknown0xa5,
+  setWorkoutControlState,
   setIncline,
 };

@@ -1,8 +1,8 @@
 const EventEmitter = require("events");
 const noble = require("noble");
 
-const { S1_SERVICE, S1_CHAR_DATA_OUTPUT, S1_CHAR_COMMAND_INPUT } = require("./uuids");
-const { ackCmd, getMaxLevel, setWorkoutMode, setWorkoutParams, setIncline, getWorkoutState, unknown0xa5 } = require("./packets");
+const { S1_SERVICE, S1_CHAR_DATA_OUTPUT, S1_CHAR_COMMAND_INPUT, S1_CHAR_MYSTERY_OUTPUT, S2_SERVICE, S2_CHAR_MYSTERY_OUTPUT, CHAR_MAP } = require("./uuids");
+const { ackCmd, getMaxLevel, setWorkoutMode, setWorkoutParams, setIncline, getWorkoutState, setWorkoutControlState } = require("./packets");
 
 class Client {
   /**
@@ -37,40 +37,77 @@ class Client {
           return reject(err);
         }
 
-        this.peripheral.discoverServices([S1_SERVICE], (err, services) => {
+        this.peripheral.discoverServices([], (err, services) => {
           if (err != null) {
             this.disconnect();
             return reject(err);
           }
 
-          services[0].discoverCharacteristics([], (err, characteristics) => {
+          const s1 = services.find(s => s.uuid === S1_SERVICE);
+          const s2 = services.find(s => s.uuid === S2_SERVICE);
+
+          s1.discoverCharacteristics([], (err, characteristics) => {
             if (err != null) {
               this.disconnect();
               return reject(err);
             }
 
-            console.log(characteristics.map(c => [c.uuid, c.properties]));
-
             this.commandInput = characteristics.find(c => c.uuid === S1_CHAR_COMMAND_INPUT);
             this.dataOutput = characteristics.find(c => c.uuid === S1_CHAR_DATA_OUTPUT);
+            this.mysterousOutput = characteristics.find(c => c.uuid === S1_CHAR_MYSTERY_OUTPUT);
 
-            this.dataOutput.subscribe(() => {
+            this.dataOutput.subscribe(err => {
+              if (err != null) {
+                this.disconnect();
+                return reject(err);
+              }
+
               this.dataOutput.on("data", (data) => {
-                this.handleData(data);
+                this.handleData(this.dataOutput.uuid, data);
               })
-  
-              this.connected = true;
-              this.starting = false;
-              this.started = false;
-  
-              this.pollData();
-  
-              resolve();
-            })
-          })
-        })
-      })
-    })
+
+              this.mysterousOutput.subscribe(err => {
+                if (err != null) {
+                  this.disconnect();
+                  return reject(err);
+                }
+
+                this.mysterousOutput.on("data", (data) => {
+                  this.handleData(this.mysterousOutput, data);
+                })
+
+                s2.discoverCharacteristics([], (err, characteristics) => {
+                  if (err != null) {
+                    this.disconnect();
+                    return reject(err);
+                  }
+          
+                  this.mysterousOutput2 = characteristics.find(c => c.uuid === S2_CHAR_MYSTERY_OUTPUT);
+                  this.mysterousOutput2.subscribe(err => {
+                    if (err != null) {
+                      this.disconnect();
+                      return reject(err);
+                    }
+
+                    this.mysterousOutput2.on("data", (data) => {
+                      this.handleData(this.mysterousOutput2.uuid, data);
+                    })
+
+                    this.connected = true;
+                    this.starting = false;
+                    this.started = false;
+        
+                    this.pollData();
+        
+                    resolve();
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
   }
 
   /**
@@ -90,18 +127,22 @@ class Client {
    */
   async start() {
     this.starting = true;
-    await wait(100);
+    await wait(500);
     await this.writeCommand(ackCmd());
-    await wait(300);
+    await wait(500);
     await this.writeCommand(setWorkoutMode());
-    await wait(300);
+    await wait(500);
     await this.writeCommand(setWorkoutParams());
-    await wait(300);
+    await wait(500);
+    await this.writeCommand(setWorkoutControlState(1));
+    await wait(500);
     await this.writeCommand(setIncline(18));
-    await wait(300);
-    await this.writeCommand(unknown0xa5());
   
+    await wait(100);
     this.started = true;
+
+    await wait(20000);
+    await this.writeCommand(setWorkoutControlState(0));
   }
 
   /**
@@ -126,8 +167,8 @@ class Client {
   /**
    * @param {Buffer} data 
    */
-  handleData(data) {
-    console.log("DATA", data);
+  handleData(uuid, data) {
+    console.log("DATA", CHAR_MAP[uuid], data);
   }
 
   async pollData() {

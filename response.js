@@ -42,16 +42,16 @@ class Response {
    */
   parse() {
     switch (this.kind) {
-      case 0xa0: return {
+      case 0xb0: return {
         kind: "ack",
       };
 
-      case 0xa1: return {
+      case 0xb1: return {
         kind: "maxLevel",
         maxLevel: this.getValue8(0),
       };
 
-      case 0xa2: return {
+      case 0xb2: return {
         kind: "workoutState",
         workoutState: {
           minutes: this.getValue8(0),

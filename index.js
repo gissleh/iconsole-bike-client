@@ -147,9 +147,6 @@ class Client {
   
     await wait(100);
     this.started = true;
-
-    await wait(20000);
-    await this.writeCommand(setWorkoutControlState(0));
   }
 
   /**

@@ -54,14 +54,20 @@ class Response {
         };
 
       case 0xb2:
+        const pulse = this.getValue16(10);
+
         return {
           kind: "workoutState",
           workoutState: {
             minutes: this.getValue8(0),
             seconds: this.getValue8(1),
-            calories: this.getValue16(8),
-            distance: this.getValue16(6) / 10.0,
             speed: this.getValue16(2) / 10.0,
+            rpm: this.getValue16(4),
+            distance: this.getValue16(6) / 10.0,
+            calories: this.getValue16(8),
+            pulse: pulse > 0 ? pulse : null,
+            watt: this.getValue16(12) / 10.0,
+            level: this.getValue16(14),
           },
         };
 

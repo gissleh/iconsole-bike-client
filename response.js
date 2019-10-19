@@ -67,7 +67,7 @@ class Response {
             calories: this.getValue16(8),
             pulse: pulse > 0 ? pulse : null,
             watt: this.getValue16(12) / 10.0,
-            level: this.getValue16(14),
+            level: this.getValue8(14),
           },
         };
 

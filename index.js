@@ -138,8 +138,8 @@ class Client {
     await this.writeCommand(ackCmd());
     await wait(500);
     await this.writeCommand(setWorkoutMode());
-    await wait(500);
-    await this.writeCommand(setWorkoutParams());
+    //await wait(500);
+    //await this.writeCommand(setWorkoutParams());
     await wait(500);
     await this.writeCommand(setWorkoutControlState(1));
     await wait(500);

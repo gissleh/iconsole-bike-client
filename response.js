@@ -7,7 +7,7 @@ class Response {
     this.kind = data[1];
     this.clientId = data[2];
     this.meterId = data[3];
-    this.params = data.slice(4, data.length - 5);
+    this.params = data.slice(4, data.length - 1);
     this.checksum = data[data.length - 1];
   }
 

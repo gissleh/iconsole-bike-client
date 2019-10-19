@@ -45,7 +45,7 @@ function setWorkoutMode() {
 }
 
 function setWorkoutParams() {
-  return withChecksum([0xf0, 0xa3, 0x01, 0x01, 0x02])
+  return withChecksum([0xf0, 0xa3, 0x01, 0x01, 0x01])
 }
 
 /**

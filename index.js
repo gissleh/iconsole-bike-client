@@ -137,16 +137,18 @@ class Client {
     await wait(500);
     await this.writeCommand(ackCmd());
     await wait(500);
+    await this.writeCommand(setWorkoutParams());
+    await wait(500);
     await this.writeCommand(setWorkoutMode());
-    //await wait(500);
-    //await this.writeCommand(setWorkoutParams());
     await wait(500);
     await this.writeCommand(setWorkoutControlState(1));
-    await wait(500);
-    await this.writeCommand(setIncline(18));
-  
+ 
     await wait(100);
     this.started = true;
+
+    await wait(1800);
+    await this.writeCommand(setIncline(18));
+ 
   }
 
   /**

@@ -11,6 +11,13 @@ const {
 } = require("./packets");
 const { Response } = require("./response");
 
+const DEFAULT_QUEUES = {
+  disconnected: [],
+  connected: [ackCmd(), getMaxLevel()],
+  starting: [],
+  started: [getWorkoutState()],
+}
+
 class Client {
   /**
    * @param {noble.Peripheral} peripheral noble peripheral.
@@ -23,8 +30,9 @@ class Client {
     /** @type {noble.Characteristic} */
     this.dataOutput = null;
 
-    this.connected = false;
-    this.started = false;
+    this.state = "disconnected";
+    this.queue = [];
+    this.defaultQueuePos = 0;
 
     this.events = new EventEmitter();
   }
@@ -33,7 +41,7 @@ class Client {
    * 
    */
   connect() {
-    if (this.connected) {
+    if (this.state !== "disconnected") {
       throw new Error("Already connected!")
     }
 
@@ -100,11 +108,10 @@ class Client {
                       this.handleData(this.mysterousOutput2.uuid, data);
                     })
 
-                    this.connected = true;
-                    this.starting = false;
-                    this.started = false;
+                    this.state === "connected";
+                    this.defaultQueuePos = 0;
         
-                    this.pollData();
+                    this.sendLoop();
         
                     resolve();
                   });
@@ -121,12 +128,22 @@ class Client {
    * Teardown and clean up everything.
    */
   disconnect() {
+    if (this.state === "disconnected") {
+      return
+    }
+
     this.peripheral.disconnect();
-    this.events.removeAllListeners();
-    this.connected = false;
-    this.started = false;
-    this.starting = false;
     noble.stopScanning();
+    
+    this.events.removeAllListeners();
+
+    this.state = "disconnected";
+    this.defaultQueuePos = 0;
+
+    const queue = this.queue.splice(0);
+    for (const {reject} of queue) {
+      reject(new Error("Disconnected"))
+    }
   }
 
   /**
@@ -181,21 +198,29 @@ class Client {
     }
   }
 
-  async pollData() {
+  async sendLoop() {
     try {
-      await this.writeCommand(ackCmd());
-
-      while (this.connected) {
-        if (this.started) {
-          await this.writeCommand(getWorkoutState());
-          await wait(500);
-        } else if (!this.starting) {
-          await this.writeCommand(ackCmd());
-          await wait(300);
-          await this.writeCommand(getMaxLevel());
-          await wait(300);
+      while (this.state !== "disconnected") {
+        const {message, resolve} = (this.queue[0] || {});
+        if (message != null) {
+          this.queue.splice(1);
         } else {
-          await wait(100);
+          const defaultQueue = DEFAULT_QUEUES[this.state];
+
+          message = defaultQueue[this.defaultQueuePos];
+          this.defaultQueuePos = (this.defaultQueuePos + 1) % defaultQueue.length;
+
+          if (message != null) {
+            await wait(100);
+            continue;
+          }
+        }
+
+        await this.writeCommand(message);
+        await wait(500);
+
+        if (resolve != null) {
+          resolve();
         }
       }
     } catch (err) {

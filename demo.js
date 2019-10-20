@@ -27,17 +27,17 @@ function setupListeners(client) {
     await client.start({calories: 50});
     await new Promise(resolve => setTimeout(resolve, 2000))    
     console.error("Setting level to 18...");
-    await client.setResistance(18);
+    await client.setLevel(18);
     await new Promise(resolve => setTimeout(resolve, 3000))    
     console.error("Setting level to 14...");
-    await client.setResistance(14);
+    await client.setLevel(14);
     await new Promise(resolve => setTimeout(resolve, 5000))    
     console.error("Pausing...");
     await client.pause();
     await new Promise(resolve => setTimeout(resolve, 10000))    
     console.error("Resuming...");
     await client.resume();
-    await client.setResistance(18);
+    await client.setLevel(18);
   } catch (err) {
     console.error(err);
     process.exit(1);

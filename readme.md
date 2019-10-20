@@ -25,7 +25,7 @@ const myBike = "00:00:00:00:00:00"; // Get MAC from config file or something els
 
 // Connect to client and listen to events.
 const client = await Client.scan(myBike, 10000);
-client.events.on("workoutState", data => console.log("DATA", data));
+client.events.on("data", data => console.log("DATA", data));
 client.events.on("send", data => console.log("SEND", [...data].map(n => hex(n)).join(" ")));
 client.events.on("error", err => console.log("ERROR", err));
 
@@ -39,9 +39,11 @@ await client.start({calories: 50, level: 12});
 
 // Pause the bike
 await client.pause();
+
+// Resume the bike
 await client.resume();
 
-// Set resistance level (`level` in startWOrkout)
+// Set resistance level (same `level` as in start options)
 await client.setResistance(18);
 ```
 

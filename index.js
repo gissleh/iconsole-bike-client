@@ -6,7 +6,7 @@ const {
   S2_SERVICE, S2_CHAR_MYSTERY_OUTPUT, 
 } = require("./uuids");
 const { 
-  ackCmd, getMaxLevel, setWorkoutMode, setWorkoutParams, setIncline, 
+  ackCmd, getMaxLevel, setWorkoutMode, setWorkoutParams, setResistanceLevel,
   getWorkoutState, setWorkoutControlState 
 } = require("./packets");
 const { Response } = require("./response");
@@ -20,14 +20,14 @@ const DEFAULT_QUEUES = {
 
 class Client {
   /**
-   * @param {noble.Peripheral} peripheral noble peripheral.
+   * @param {Peripheral} peripheral noble peripheral.
    */
   constructor(peripheral) {
     this.peripheral = peripheral;
     
-    /** @type {noble.Characteristic} */
+    /** @type {Characteristic} */
     this.commandInput = null;
-    /** @type {noble.Characteristic} */
+    /** @type {Characteristic} */
     this.dataOutput = null;
 
     this.state = "disconnected";
@@ -171,7 +171,7 @@ class Client {
       this.queueCommand(setWorkoutMode(workoutMode)),
       this.queueCommand(setWorkoutParams(timeInMinute, distanceInKM, calories, pulse, watt)),
       this.queueCommand(setWorkoutControlState(1)),
-      this.queueCommand(setIncline(level)),
+      this.queueCommand(setResistanceLevel(level)),
     ]);
 
     this.state = "started";
@@ -181,8 +181,8 @@ class Client {
   /**
    * @param {number} level 
    */
-  async setLevel(level) {
-    return await this.queueCommand(setIncline(level));
+  async setResistance(level) {
+    return await this.queueCommand(setResistanceLevel(level));
   }
 
   async resume() {

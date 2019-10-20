@@ -26,32 +26,36 @@ function withChecksum(a) {
   return new Uint8Array([...a, oneByte(a.reduce((p, c) => p + c, 0), false)]);
 }
 
+function action(actionId, clientId = 0, meterId = 0) {
+  return [oneByte(0xf0, false), oneByte(actionId, false), oneByte(clientId), oneByte(meterId)];
+}
+
 /**
  * Ack CMD. Sent in the beginning to black the screen.
  */
 function ackCmd() {
-  return withChecksum([0xf0, 0xa0, 0x01, 0x01])
+  return withChecksum(action(0xa0))
 }
 
 /**
  * Gets some kind of max level? Who knows.
  */
 function getMaxLevel() {
-  return withChecksum([0xf0, 0xa1, 0x01, 0x01])
+  return withChecksum(action(0xa1))
 }
 
 /**
  * Returns a workout state. Should be sent regularly.
  */
 function getWorkoutState() {
-  return withChecksum([0xf0, 0xa2, 0x01, 0x01])
+  return withChecksum(action(0xa2))
 }
 
 /**
  * Not yet demystified.
  */
 function setWorkoutMode(mode) {
-  return withChecksum([0xf0, 0xa3, 0x01, 0x01, oneByte(mode)])
+  return withChecksum([...action(0xa3), oneByte(mode)])
 }
 
 /**
@@ -60,19 +64,18 @@ function setWorkoutMode(mode) {
  * @param {number} calories
  * @param {number} pulse
  * @param {number} watt
+ * @param {number} unit
  * @return {Uint8Array}
  */
-function setWorkoutParams(timeInMinute, distanceInKM, calories, pulse, watt) {
+function setWorkoutParams(timeInMinute, distanceInKM, calories, pulse, watt, unit) {
   return withChecksum([
-    0xf0,
-    0xa4,
-    0x01,
-    0x01,
+    ...action(0xa4),
     oneByte(timeInMinute),
     ...twoBytes(distanceInKM * 10.0),
     ...twoBytes(calories),
     ...twoBytes(pulse),
     ...twoBytes(watt * 10.0),
+    oneByte(unit),
   ]);
 }
 
@@ -85,13 +88,12 @@ function setWorkoutControlState(state = 1) {
 }
 
 /**
- * Sets incline, it looks like. It's uncertain if level is really 1+level, but
- * everything else is one-based.
+ * Sets resistance level.
  *
  * @param {number} level
  */
-function setIncline(level) {
-  return withChecksum([0xf0, 0xa6, 0x01, 0x01, 0x01 + level])
+function setResistanceLevel(level) {
+  return withChecksum([0xf0, 0xa6, 0x01, 0x01, oneByte(level)])
 }
 
 module.exports = {
@@ -101,5 +103,5 @@ module.exports = {
   setWorkoutMode,
   setWorkoutParams,
   setWorkoutControlState,
-  setIncline,
+  setResistanceLevel,
 };

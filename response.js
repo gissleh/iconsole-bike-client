@@ -55,7 +55,7 @@ class Response {
 
       case 0xb2: // ICGetWorkoutStatus
         return {
-          kind: "workoutState",
+          kind: "workoutStatus",
           workoutStatus: {
             minutes: this.getValue8(0),
             seconds: this.getValue8(1),
@@ -73,6 +73,41 @@ class Response {
         return {
           kind: "workoutMode",
           workoutMode: this.getValue8(0),
+        };
+
+      case 0xb4: // ICSetWorkoutParam
+        return {
+          kind: "workoutParams",
+          workoutParams: {
+            // These are just guesses (not tested yet)
+            timeInMinute: this.getValue8(0),
+            distanceInKM: this.getValue8(1) / 10.0,
+            calories: this.getValue16(3),
+            pulse: this.getValue16(5),
+            watt: this.getValue16(7) / 10.0,
+            unit: this.getValue16(8),
+          },
+        };
+
+      case 0xb5: // ICSetWorkoutControlStateCmd
+        return {
+          kind: "workoutControlState",
+          workoutControlState: this.getValue8(0),
+        };
+
+      case 0xb6: // SetResistanceLevelCmd
+        return {
+          kind: "resistanceLevel",
+          resistanceLevel: this.getValue8(0),
+        };
+
+      case 0xb7: // ICClientIDNotify
+        return {
+          kind: "clientIds",
+          clientIds: {
+            clientId: this.clientId,
+            meterId: this.meterId,
+          },
         };
 
       default:

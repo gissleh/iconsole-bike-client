@@ -42,33 +42,37 @@ class Response {
    */
   parse() {
     switch (this.kind) {
-      case 0xb0:
+      case 0xb0: // AckCmd
         return {
           kind: "ack",
         };
 
-      case 0xb1:
+      case 0xb1: // ICSetWorkoutControlStateCmd
         return {
           kind: "maxLevel",
           maxLevel: this.getValue8(0),
         };
 
-      case 0xb2:
-        const pulse = this.getValue16(10);
-
+      case 0xb2: // ICGetWorkoutStatus
         return {
           kind: "workoutState",
-          workoutState: {
+          workoutStatus: {
             minutes: this.getValue8(0),
             seconds: this.getValue8(1),
             speed: this.getValue16(2) / 10.0,
             rpm: this.getValue16(4),
             distance: this.getValue16(6) / 10.0,
             calories: this.getValue16(8),
-            pulse: pulse > 0 ? pulse : null,
+            pulse: this.getValue16(10) || null,
             watt: this.getValue16(12) / 10.0,
             level: this.getValue8(14),
           },
+        };
+
+      case 0xb3: // ICSetWorkoutMode
+        return {
+          kind: "workoutMode",
+          workoutMode: this.getValue8(0),
         };
 
       default:

@@ -9,6 +9,7 @@ function setupListeners(client) {
   }
   
   client.events.on("data", data => console.log("DATA", data));
+  client.events.on("mysteryData", (data, uuid) => console.log("MYSTERY", uuid, [...data].map(n => hex(n).join(" "))));
   client.events.on("send", data => console.log("SEND", [...data].map(n => hex(n)).join(" ")));
   client.events.on("error", err => console.log("ERROR", err));
 }
@@ -23,7 +24,7 @@ function setupListeners(client) {
     console.error("Connected...");
     await new Promise(resolve => setTimeout(resolve, 3000))
     console.error("Starting...");
-    await client.start();
+    await client.start({calories: 50});
     await new Promise(resolve => setTimeout(resolve, 2000))    
     console.error("Setting level to 18...");
     await client.setResistance(18);
@@ -36,6 +37,7 @@ function setupListeners(client) {
     await new Promise(resolve => setTimeout(resolve, 10000))    
     console.error("Resuming...");
     await client.resume();
+    await client.setResistance(18);
   } catch (err) {
     console.error(err);
     process.exit(1);

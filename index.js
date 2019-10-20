@@ -162,6 +162,7 @@ class Client {
     watt = 0,
     level = 0,
     workoutMode = 0,
+    unit = 0,
   } = {}) {
     this.state = "starting";
     this.defaultQueuePos = 0;
@@ -169,7 +170,7 @@ class Client {
     await Promise.all([
       this.queueCommand(ackCmd()),
       this.queueCommand(setWorkoutMode(workoutMode)),
-      this.queueCommand(setWorkoutParams(timeInMinute, distanceInKM, calories, pulse, watt)),
+      this.queueCommand(setWorkoutParams(timeInMinute, distanceInKM, calories, pulse, watt, unit)),
       this.queueCommand(setWorkoutControlState(1)),
       this.queueCommand(setResistanceLevel(level)),
     ]);
@@ -238,6 +239,8 @@ class Client {
       if (this.lastCommand === resp.kind - 0x10) {
         this.lastCommandResolve();
       }
+    } else {
+      this.events.emit("mysteryData", data, uuid)
     }
   }
 
@@ -324,7 +327,7 @@ class Client {
       
       if (command != null) {
         this.lastCommand = command;
-        this.lastCommandResolve = () => setTimeout(resolve2, 100);
+        this.lastCommandResolve = () => setTimeout(resolve2, 200);
       }
 
       setTimeout(resolve2, ms)

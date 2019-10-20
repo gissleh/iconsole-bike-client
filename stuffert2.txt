@@ -1,0 +1,355 @@
+SEND 0xf0 0xa0 0x01 0x01 0x92
+DATA { kind: 'ack' }
+SEND 0xf0 0xa1 0x01 0x01 0x93
+DATA { kind: 'maxLevel', maxLevel: 32 }
+SEND 0xf0 0xa0 0x01 0x01 0x92
+DATA { kind: 'ack' }
+SEND 0xf0 0xa1 0x01 0x01 0x93
+DATA { kind: 'maxLevel', maxLevel: 32 }
+SEND 0xf0 0xa0 0x01 0x01 0x92
+DATA { kind: 'ack' }
+SEND 0xf0 0xa1 0x01 0x01 0x93
+DATA { kind: 'maxLevel', maxLevel: 32 }
+SEND 0xf0 0xa0 0x01 0x01 0x92
+DATA { kind: 'ack' }
+SEND 0xf0 0xa1 0x01 0x01 0x93
+DATA { kind: 'maxLevel', maxLevel: 32 }
+SEND 0xf0 0xa0 0x01 0x01 0x92
+DATA { kind: 'ack' }
+SEND 0xf0 0xa1 0x01 0x01 0x93
+DATA { kind: 'maxLevel', maxLevel: 32 }
+SEND 0xf0 0xa0 0x01 0x01 0x92
+DATA { kind: 'ack' }
+SEND 0xf0 0xa0 0x01 0x01 0x92
+DATA { kind: 'ack' }
+SEND 0xf0 0xa3 0x01 0x01 0x01 0x96
+DATA { kind: 'workoutMode', workoutMode: 0 }
+SEND 0xf0 0xa4 0x01 0x01 0x01 0x01 0x01 0x01 0x33 0x01 0x01 0x01 0x01 0x01 0xd2
+DATA { kind: 'workoutParams',
+  workoutParams: 
+   { timeInMinute: 0,
+     distanceInKM: 0,
+     calories: 50,
+     pulse: 0,
+     watt: 0,
+     unit: 0 } }
+SEND 0xf0 0xa5 0x01 0x01 0x02 0x99
+DATA { kind: 'workoutControlState', workoutControlState: 1 }
+SEND 0xf0 0xa6 0x01 0x01 0x01 0x99
+DATA { kind: 'resistanceLevel', resistanceLevel: 0 }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 0,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 1 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 1,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 1 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 1,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 1 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 1,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 1 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 2,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 1 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 2,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 1 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 2,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 1 } }
+SEND 0xf0 0xa6 0x01 0x01 0x13 0xab
+DATA { kind: 'resistanceLevel', resistanceLevel: 18 }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 3,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 18 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 3,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 18 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 3,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 18 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 4,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 18 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 4,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 18 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 4,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 18 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 5,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 18 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 5,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 18 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 5,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 18 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 5,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 18 } }
+SEND 0xf0 0xa6 0x01 0x01 0x0f 0xa7
+DATA { kind: 'resistanceLevel', resistanceLevel: 14 }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 6,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 14 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 6,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 14 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 7,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 14 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 7,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 14 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 7,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 14 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 8,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 14 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 8,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 14 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 8,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 14 } }
+SEND 0xf0 0xa2 0x01 0x01 0x94
+DATA { kind: 'workoutStatus',
+  workoutStatus: 
+   { minutes: 0,
+     seconds: 8,
+     speed: 0,
+     rpm: 0,
+     distance: 0,
+     calories: 50,
+     pulse: null,
+     watt: 0,
+     level: 14 } }

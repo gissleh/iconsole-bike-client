@@ -5,3 +5,5 @@
 /.vscode
 /.idea
 
+# To prevent it from adding files created while testing
+*.txt

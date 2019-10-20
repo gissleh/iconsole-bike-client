@@ -150,22 +150,29 @@ class Client {
    * Start starts the workout. Paramters will be added once the protocol is understood better.
    */
   async start() {
-    this.starting = true;
-    await wait(500);
-    await this.writeCommand(ackCmd());
-    await wait(500);
-    await this.writeCommand(setWorkoutParams());
-    await wait(500);
-    await this.writeCommand(setWorkoutMode());
-    await wait(500);
-    await this.writeCommand(setWorkoutControlState(1));
- 
-    await wait(100);
-    this.started = true;
+    this.state === "starting";
+    this.defaultQueuePos = 0;
 
-    await wait(1800);
-    await this.writeCommand(setIncline(18));
- 
+    await this.queueCommand(ackCmd());
+    await this.queueCommand(setWorkoutMode());
+    await this.queueCommand(setWorkoutParams());
+    await this.queueCommand(setWorkoutControlState(1));
+    await this.queueCommand(setIncline(18));
+
+    this.state = "started";
+    this.defaultQueuePos = 0;
+  }
+
+  /**
+   * Write a command. This does not listen to its specific response, however.
+   * 
+   * @param {number[] | Buffer | Uint8Array} data Data to write.
+   */
+  queueCommand(data) {
+    return new Promise((resolve, reject) => {
+      const buffer = Buffer.from(data);
+      this.queue.push({buffer, resolve, reject})
+    })
   }
 
   /**
@@ -211,13 +218,13 @@ class Client {
           this.defaultQueuePos = (this.defaultQueuePos + 1) % defaultQueue.length;
 
           if (message != null) {
-            await wait(100);
+            await this.wait(100);
             continue;
           }
         }
 
         await this.writeCommand(message);
-        await wait(500);
+        await this.wait(500);
 
         if (resolve != null) {
           resolve();
@@ -269,10 +276,25 @@ class Client {
       }, timeout)
     })
   }
-}
 
-function wait(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
+  wait(ms, command) {
+    return new Promise(resolve => {
+      let done = false;
+      let resolve2 = () => {
+        if (!done) {
+          done = true;
+          resolve();
+        }
+      }
+      
+      if (command != null) {
+        this.lastCommand = command;
+        this.lastCommandResolve = resolve2;
+      }
+
+      setTimeout(resolve2, ms)
+    })
+  }
 }
 
 module.exports = Client;

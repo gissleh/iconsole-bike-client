@@ -18,9 +18,18 @@ const DEFAULT_QUEUES = {
   started: [getWorkoutState()],
 }
 
+/**
+ * Client is a bluetooth client for iConsole-based bluetooth-enabled exercise bike.
+ */
 class Client {
   /**
-   * @param {Peripheral} peripheral noble peripheral.
+   * Construct the client. You should use scan instead unless you manually
+   * did something with `noble` to get the peripheral object.
+   * 
+   * **WARNING**: Unstable API, will change once refactored to sblendid. You
+   * should pin the version if you use this.
+   * 
+   * @param {noble.Peripheral} peripheral noble peripheral.
    */
   constructor(peripheral) {
     this.peripheral = peripheral;
@@ -38,7 +47,9 @@ class Client {
   }
 
   /**
+   * Connect to the bike.
    * 
+   * @returns {Promise<void>}
    */
   connect() {
     if (this.state !== "disconnected") {
@@ -110,9 +121,13 @@ class Client {
 
                     this.state = "connected";
                     this.defaultQueuePos = 0;
-        
+                    this.queue = [
+                      ackCmd(),
+                      getMaxLevel(),
+                    ];
+
                     this.sendLoop();
-        
+
                     resolve();
                   });
                 });
@@ -146,6 +161,9 @@ class Client {
     }
   }
 
+  /**
+   * Disconnect (if connected), and remove all event listeners.
+   */
   destroy() {
     this.disconnect();
     this.events.removeAllListeners();
@@ -153,6 +171,16 @@ class Client {
 
   /**
    * Start starts the workout. Paramters will be added once the protocol is understood better.
+   * 
+   * @param {*} opts
+   * @param {number} opts.timeInMinute Minute goal, will stop once timer runs down.
+   * @param {number} opts.distanceInKM Distance goal, will stop once distance is reached.
+   * @param {number} opts.calories Calorie goal, will stop once it counts down.
+   * @param {number} opts.pulse Not yet understood, set if you're feeling adventurous.
+   * @param {number} opts.watt Not yet understood, set if you're feeling adventurous.
+   * @param {number} opts.workoutMode Not yet understood, set if you're feeling adventurous.
+   * @param {number} opts.unit Not yet understood, set if you're feeling adventurous.
+   * @param {number} opts.level Start at resistance level. Equialent to calling `setLevel` after start.
    */
   async start({
     timeInMinute = 0, 
@@ -160,9 +188,9 @@ class Client {
     calories = 0, 
     pulse = 0, 
     watt = 0,
-    level = 0,
     workoutMode = 0,
     unit = 0,
+    level = 0,
   } = {}) {
     this.state = "starting";
     this.defaultQueuePos = 0;
@@ -180,22 +208,35 @@ class Client {
   }
 
   /**
+   * Set resistance level. You should listen to `maxLevel` event to get the max value for this.
+   * 
    * @param {number} level 
    */
-  async setResistance(level) {
+  async setLevel(level) {
     return await this.queueCommand(setResistanceLevel(level));
   }
 
+  /**
+   * Resume the exercise.
+   */
   async resume() {
     return await this.queueCommand(setWorkoutControlState(1));
   }
 
+  /**
+   * Pause the exercise.
+   */
   async pause() {
     return await this.queueCommand(setWorkoutControlState(2));
   }
 
   /**
-   * Write a command. This does not listen to its specific response, however.
+   * Queue a command for writing. The promise will resolve if the command
+   * is sent, or reject if the bike disconnects before it's sent. This allows
+   * for commands to be written such that they don't interfere with one another.
+   * 
+   * The queue will be advanced after 500ms without a response, so invalid messages
+   * will not do any harm.
    * 
    * @param {number[] | Buffer | Uint8Array} data Data to write.
    */
@@ -207,7 +248,7 @@ class Client {
   }
 
   /**
-   * Write a command. This does not listen to its specific response, however.
+   * Write a command. Use `queueCommand` or the helper methods instead.
    * 
    * @param {number[] | Buffer | Uint8Array} data Data to write.
    */
@@ -226,6 +267,8 @@ class Client {
   }
 
   /**
+   * This is a handler for the event data. Should not be called from outside.
+   * 
    * @param {Buffer} data 
    */
   handleData(uuid, data) {
@@ -244,6 +287,9 @@ class Client {
     }
   }
 
+  /**
+   * Loop over the send queue, or send default messages..
+   */
   async sendLoop() {
     try {
       while (this.state !== "disconnected") {
@@ -279,7 +325,7 @@ class Client {
 
   /**
    * Scan for a peripheral. It will return a client you can call connect on if it
-   * finds it.
+   * finds it. Or a timeout error if the timeout is reached..
    * 
    * @param {string} addr The uuid of the peripheral
    * @param {number} timeout How many milliseconds to scan for
@@ -315,6 +361,13 @@ class Client {
     })
   }
 
+  /**
+   * This waits for `ms` or command arriving + 200ms, whichever comes
+   * first.
+   * 
+   * @param {number} ms Amount of time to wait.
+   * @param {number} command Command whose response to wait for.
+   */
   wait(ms, command) {
     return new Promise(resolve => {
       let done = false;

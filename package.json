@@ -1,15 +1,15 @@
 {
-  "name": "ykonsole",
+  "name": "iconsole-bike-client",
   "version": "0.1.0",
   "private": true,
-  "description": "iConsole bluetooth client.",
+  "description": "iConsole bluetooth client for exercise bikes.",
   "main": "index.js",
   "scripts": {
     "test": "node_modules/mocha/bin/mocha *.test.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gissleh/ykonsole.git"
+    "url": "git+https://github.com/gissleh/iconsole-bike-client.git"
   },
   "keywords": [
     "iconsole",
@@ -21,9 +21,9 @@
   "author": "Gisle",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/gissleh/ykonsole/issues"
+    "url": "https://github.com/gissleh/iconsole-bike-client/issues"
   },
-  "homepage": "https://github.com/gissleh/ykonsole#readme",
+  "homepage": "https://github.com/gissleh/iconsole-bike-client#readme",
   "dependencies": {
     "noble": "^1.9.1"
   },

@@ -122,8 +122,8 @@ class Client {
                     this.state = "connected";
                     this.defaultQueuePos = 0;
                     this.queue = [
-                      ackCmd(),
-                      getMaxLevel(),
+                      {message: ackCmd()},
+                      {message: getMaxLevel()},
                     ];
 
                     this.sendLoop();

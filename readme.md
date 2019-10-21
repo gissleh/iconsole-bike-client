@@ -26,7 +26,6 @@ const myBike = "00:00:00:00:00:00"; // Get MAC from config file or something els
 // Connect to client and listen to events.
 const client = await Client.scan(myBike, 10000);
 client.events.on("data", data => console.log("DATA", data));
-client.events.on("send", data => console.log("SEND", [...data].map(n => hex(n)).join(" ")));
 client.events.on("error", err => console.log("ERROR", err));
 
 // Connect to the bike.

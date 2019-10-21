@@ -1,6 +1,6 @@
 {
   "name": "iconsole-bike-client",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "iConsole bluetooth client for exercise bikes.",
   "main": "index.js",
   "scripts": {

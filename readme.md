@@ -1,3 +1,5 @@
+**ARCHIVED:** I have not had a compatible device for years. I recommend forking and updating dependencies yourself if you do and want to use this. Newer iConsole-compatible bikes have a different protocol.
+
 # `iconsole-bike-client`
 
 This is a reversed bluetooth client for exercise bikes that uses the iConsole application.
